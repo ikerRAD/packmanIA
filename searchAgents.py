@@ -441,6 +441,7 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
+    #Foodgrid son las posiciones a todas las comidas
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
     return 0
