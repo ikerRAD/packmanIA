@@ -443,8 +443,27 @@ def foodHeuristic(state, problem):
     """
     #Foodgrid son las posiciones a todas las comidas
     position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+    foodlist = foodGrid.asList()
+    
+    result = 0
+    while len(foodlist)>1:
+        min_i = 0
+        min_val = abs(foodlist[0][0] - position[0]) + abs(foodlist[0][1] - position[1])
+        #calculamos mínimo
+        for i in range(1, len(foodlist)):
+            new_val = abs(foodlist[i][0] - position[0]) + abs(foodlist[i][1] - position[1])
+            if new_val < min_val:   
+                min_val = new_val
+                min_i = i
+        #una vez ya calculado, procesamos
+        result += min_val
+        position = foodlist[min_i]
+        foodlist = foodlist[:min_i]+foodlist[min_i+1:]
+    #último caso
+    if foodlist:
+        return result + abs(foodlist[0][0] - position[0]) + abs(foodlist[0][1] - position[1])
+    else:
+        return 0
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
