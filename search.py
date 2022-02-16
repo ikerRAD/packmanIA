@@ -75,17 +75,87 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+        
+    return fs(problem, 1)
+    
+    
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+   
+    return fs(problem, 0)
+
+def fs(problem, tipo):
+    if tipo == 1:
+        from util import Stack as estr
+    elif tipo == 0:
+        from util import Queue as estr
+    
+    #inicializamos valores
+    borde = estr()     
+    visitado = []   
+    sol = []   
+    caminos = estr() 
+      
+    #damos los primeros valores
+    borde.push(problem.getStartState())
+    
+    
+    while not borde.isEmpty():
+        
+        actual = borde.pop()
+        if problem.isGoalState(actual):
+            break
+        
+        if actual not in visitado:
+            #visitamos
+            visitado.append(actual)
+            #obtenemos todos los posibles movimientos
+            successors = problem.getSuccessors(actual)
+            for coord,dire,_ in successors:
+                borde.push(coord)
+                camino = sol + [dire]
+                caminos.push(camino)
+        #guardamos la solución parcial
+        sol = caminos.pop()
+        
+    return sol
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    #inicializamos valores
+    borde = util.PriorityQueue()     
+    visitado = []   
+    sol = []   
+    caminos = util.PriorityQueue()  
+      
+    #damos los primeros valores
+    borde.push(problem.getStartState(),0)
+    
+    
+    while not borde.isEmpty():
+        
+        actual = borde.pop()
+        if problem.isGoalState(actual):
+            break
+        
+        if actual not in visitado:
+            #visitamos
+            visitado.append(actual)
+            #obtenemos todos los posibles movimientos
+            successors = problem.getSuccessors(actual)
+            for coord,dire,_ in successors:
+                camino = sol + [dire]
+                coste = problem.getCostOfActions(camino)
+                borde.push(coord, coste)
+                caminos.push(camino, coste)
+        #guardamos la solución parcial
+        sol = caminos.pop()
+        
+    return sol
 
 def nullHeuristic(state, problem=None):
     """
@@ -97,8 +167,36 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    h = heuristic(problem.getStartState(), problem)
-    util.raiseNotDefined()
+    #inicializamos valores
+    borde = util.PriorityQueue()     
+    visitado = []   
+    sol = []   
+    caminos = util.PriorityQueue()  
+      
+    #damos los primeros valores
+    borde.push(problem.getStartState(),0)
+    
+    
+    while not borde.isEmpty():
+        
+        actual = borde.pop()
+        if problem.isGoalState(actual):
+            break
+        
+        if actual not in visitado:
+            #visitamos
+            visitado.append(actual)
+            #obtenemos todos los posibles movimientos
+            successors = problem.getSuccessors(actual)
+            for coord,dire,_ in successors:
+                camino = sol + [dire]
+                coste = problem.getCostOfActions(camino) + heuristic(coord,problem)
+                borde.push(coord, coste)
+                caminos.push(camino, coste)
+        #guardamos la solución parcial
+        sol = caminos.pop()
+        
+    return sol
 
 
 # Abbreviations
