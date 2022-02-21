@@ -326,6 +326,9 @@ class CornersProblem(search.SearchProblem):
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
             hitsWall = self.walls[nextx][nexty]
+            
+            self._expanded +=1
+            
             if not hitsWall:
                 
                 if (nextx,nexty) in self.corners:
@@ -375,10 +378,10 @@ def cornersHeuristic(state, problem):
     
     for c in corners:
         if not esquinas[c]:
-            dists.append(mazeDistance(pos, c, problem.startingGameState))
+            dists.append(abs(pos[0]-c[0]) + abs(pos[1] - c[1]))
     
     if dists:
-        ret = min(dists) + max(dists)
+        ret = min(dists) * len(dists)
     
     return ret # Default to trivial solution
 
