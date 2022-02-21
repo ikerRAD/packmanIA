@@ -327,7 +327,6 @@ class CornersProblem(search.SearchProblem):
             nextx, nexty = int(x + dx), int(y + dy)
             hitsWall = self.walls[nextx][nexty]
             
-            self._expanded +=1
             
             if not hitsWall:
                 
@@ -335,6 +334,7 @@ class CornersProblem(search.SearchProblem):
                     esquinas[(nextx,nexty)] = True
                     
                 successors.append((((nextx,nexty),esquinas), action, 1))
+        self._expanded +=1
                 
         return successors
                     
@@ -373,17 +373,15 @@ def cornersHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
 
     pos,esquinas = state
-    dists = []
-    ret = 0
+    dists = [0]
+
     
     for c in corners:
         if not esquinas[c]:
-            dists.append(abs(pos[0]-c[0]) + abs(pos[1] - c[1]))
+            dists.append(abs(c[0] - pos[0]) + abs(c[1] - pos[1]))
+
     
-    if dists:
-        ret = min(dists) * len(dists)
-    
-    return ret # Default to trivial solution
+    return max(dists)# Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
