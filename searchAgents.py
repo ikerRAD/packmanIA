@@ -473,9 +473,38 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
+    #Foodgrid son las posiciones a todas las comidas
     position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+    foodlist = foodGrid.asList()
+    
+    '''result = 0
+    while len(foodlist)>1:
+        min_i = 0
+        min_val = abs(foodlist[0][0] - position[0]) + abs(foodlist[0][1] - position[1])
+        #calculamos mínimo
+        for i in range(1, len(foodlist)):
+            new_val = abs(foodlist[i][0] - position[0]) + abs(foodlist[i][1] - position[1])
+            if new_val < min_val:   
+                min_val = new_val
+                min_i = i
+        #una vez ya calculado, procesamos
+        result += min_val
+        position = foodlist[min_i]
+        foodlist = foodlist[:min_i]+foodlist[min_i+1:]
+    #último caso 
+    if foodlist:
+        return result + abs(foodlist[0][0] - position[0]) + abs(foodlist[0][1] - position[1])
+    else:
+        return 0'''
+    
+    if foodlist:
+        
+        dists = []
+        for i in range(len(foodlist)):
+            dists.append(mazeDistance(position,foodlist[i],problem.startingGameState))
+        return max(dists)
+    else:
+        return 0
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -501,12 +530,34 @@ class ClosestDotSearchAgent(SearchAgent):
         """
         # Here are some useful elements of the startState
         startPosition = gameState.getPacmanPosition()
-        food = gameState.getFood()
-        walls = gameState.getWalls()
+        food = gameState.getFood().asList()
         problem = AnyFoodSearchProblem(gameState)
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        if not food:
+            return []
+        #print(food.asList())
+        #print(walls.asList())
+        borde = util.Queue()
+        camino = util.Queue()
+        result = []
+        visit = []
+        
+        borde.push(startPosition)
+        while not borde.isEmpty():
+            pos = borde.pop()
+            if pos in food:
+                return result
+            if pos not in visit:
+                visit.append(pos)
+                for coord,direction,_ in problem.getSuccessors(pos):
+                    path = result + [direction]
+                    camino.push(path)
+                    borde.push(coord)
+                    
+            result = camino.pop()
+        
+        return []
+        
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
