@@ -7,7 +7,8 @@ import random
 from functools import reduce
 
 VISIBILITY_MATRIX_CACHE = {}
-
+#oooooooooooooo
+#ppp
 class Layout:
     """
     A Layout manages the static information about the game board.
