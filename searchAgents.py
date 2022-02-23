@@ -475,12 +475,52 @@ def foodHeuristic(state, problem):
     #Foodgrid son las posiciones a todas las comidas
     position, foodGrid = state
     foodlist = foodGrid.asList()
-    
+    walls = problem.walls.asList()
+
+
+    '''borde = util.Queue()
+        camino = util.Queue()
+        result = []
+        visit = []
+        
+        borde.push(startPosition)
+        while not borde.isEmpty():
+            pos = borde.pop()
+            if pos in food:
+                return result
+            if pos not in visit:
+                visit.append(pos)
+                for coord,direction,_ in problem.getSuccessors(pos):
+                    path = result + [direction]
+                    camino.push(path)
+                    borde.push(coord)
+                    
+            result = camino.pop()
+        
+        return []'''
     if foodlist:
         
-        dists = []
-        for i in range(len(foodlist)):
-            dists.append(mazeDistance(position,foodlist[i],problem.startingGameState))
+        dists = [0]*len(foodlist)
+        distcount = 0
+
+        borde = util.Queue()
+        visit = []
+        
+        borde.push((position,0))
+        while not borde.isEmpty() and distcount < len(dists):
+            pos,dis = borde.pop()
+            if pos in foodlist:
+                dists[distcount] = dis
+                distcount += 1
+            if pos not in visit:
+                visit.append(pos)
+                moves = [(pos[0]+1,pos[1]), (pos[0]-1,pos[1]), (pos[0],pos[1]+1), (pos[0],pos[1]-1)]
+                for option in moves:
+                    if option not in walls:
+                        borde.push((option, dis+1))
+                    
+        #for i in range(len(foodlist)):
+         #   dists.append(abs(position[0]-foodlist[i][0]) + abs(position[1]-foodlist[i][1]))#mazeDistance(position,foodlist[i],problem.startingGameState))
         return max(dists)
     else:
         return 0
