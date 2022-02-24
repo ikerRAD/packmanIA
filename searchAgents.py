@@ -498,7 +498,7 @@ def foodHeuristic(state, problem):
                     if option not in walls:
                         borde.push((option, dis+1))
                     
-        return max(dists)
+        return dists[distcount-1]#max(dists)
     else:
         return 0
 
